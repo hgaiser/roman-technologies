@@ -1,0 +1,10 @@
+# Lines starting with '#' are considered comments.
+
+#Ignore .internal files
+*.internal
+
+#Ignore /bin folders
+bin/
+
+#Ignore /build folders
+build/
