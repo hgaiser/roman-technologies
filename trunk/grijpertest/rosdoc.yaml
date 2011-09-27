@@ -1,0 +1,3 @@
+- builder: doxygen
+  exclude_patterns: "*/msg_gen/*"
+  exclude_symbols: "ros grijpertest::msg"
