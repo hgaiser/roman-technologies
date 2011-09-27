@@ -10,15 +10,15 @@
 class TemperatureListener
 {
 protected:
-    ros::NodeHandle mNodeHandle;   // ROS node handle
+    ros::NodeHandle mNodeHandle;        /// ROS node handle
 
-    ros::Subscriber mTempSensor_sub;
+    ros::Subscriber mTempSensor_sub;    /// Subscriber for temperature feedback topic, receives temperatures
 
-    time_t mStartTime;
-    time_t mLastMeasureTime;
-    std::ofstream mTemperatureFile;
-    int mTemperatures[30];
-    int mTemperatureIndex;
+    time_t mStartTime;                  /// Start time of this node, used for saving time stamp of temperature
+    time_t mLastMeasureTime;            /// Time when last temperature measurement was done, used for temperature saving interval
+    std::ofstream mTemperatureFile;     /// Stream for the temperature file
+    int mTemperatures[30];              /// Array of temperature samples to smooth the output
+    int mTemperatureIndex;              /// Current index of the temperature sample array to be modified
 public:
     /// Constructor
     TemperatureListener() : mNodeHandle(""){ }

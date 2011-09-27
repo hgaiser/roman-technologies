@@ -23,10 +23,10 @@ enum ControlMode
 class MotorHandler
 {
 protected:
-    ros::NodeHandle nh_;   ///< ROS node handle
-    CDxlGeneric *motor_;   ///< Motor interface
-    LxSerial serial_port_; ///< Serial port interface
-    ControlMode cmode;
+    ros::NodeHandle nh_;    /// ROS node handle
+    CDxlGeneric *motor_;    /// Motor interface
+    LxSerial serial_port_;  /// Serial port interface
+    ControlMode cmode;      /// Keeps track of what ControlMode the motor is in at the moment
 
 public:
     /// Constructor

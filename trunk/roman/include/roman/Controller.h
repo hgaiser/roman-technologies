@@ -8,6 +8,7 @@
 #include <roman/Key.h>
 #include "std_msgs/Empty.h"
 
+/// Different gripper states.
 enum GripperState
 {
     GS_NONE = -1,
@@ -15,6 +16,7 @@ enum GripperState
     GS_CLOSED,
 };
 
+/// Key ids for bluetooth connected PS3 controller (PS3Joy) and USB connected PS3 controller
 enum PS3Key
 {
     PS3_NONE = 0,
@@ -39,17 +41,17 @@ enum PS3Key
 class Controller
 {
 protected:
-    ros::NodeHandle mNodeHandle;   // ROS node handle
+    ros::NodeHandle mNodeHandle;    /// ROS node handle
 
-    ros::Publisher mSensor_pub;
-    ros::Publisher mMotor_pub;
-    ros::Publisher mJoint_pub;
+    ros::Publisher mSensor_pub;     /// Sensor topic, used for toggling the sensor
+    ros::Publisher mMotor_pub;      /// Motor topic, used for controlling the motor
+    ros::Publisher mJoint_pub;      /// Joint topic, used for changing the joints in RViz
 
-    ros::Subscriber mSensor_sub;
-    ros::Subscriber mKey_sub;
+    ros::Subscriber mSensor_sub;    /// Sensor feedback topic, provides sensor data
+    ros::Subscriber mKey_sub;       /// Key input topic, provides key input data (id, value)
 
-    GripperState mGripperState;
-    PS3Key mKeyPressed;
+    GripperState mGripperState;     /// Defines the state of the gripper
+    PS3Key mKeyPressed;             /// Contains the current key being pressed (PS3_NONE for no key)
 
 public:
     /// Constructor

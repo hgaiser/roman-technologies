@@ -64,6 +64,7 @@ void MotorHandler::init(char *path)
 {
     CDxlConfig *config = new CDxlConfig();
 
+    // find the connection to the motor on the 3mXl board
     if (path)
     {
         ROS_INFO("Using shared_serial");
@@ -79,6 +80,7 @@ void MotorHandler::init(char *path)
         motor_->setSerialPort(&serial_port_);
     }
 
+    // initialize the motor
     motor_->setConfig(config->setID(109));
     motor_->init(false);
     motor_->set3MxlMode(TORQUE_MODE);
