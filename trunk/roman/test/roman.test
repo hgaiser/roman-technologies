@@ -1,4 +1,4 @@
 <launch>
-  <node pkg="testfile" name ="Controller" type="Controller" />
+  <node pkg="roman" name ="Controller" type="Controller" />
   <test test-name="Controllertest" pkg="roman" type="Controllertest" />
 </launch>
