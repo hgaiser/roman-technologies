@@ -1,4 +1,4 @@
-#include "roman/Controller.h"
+#include "roman/gripper/Controller.h"
 #include <sstream>
 #include "sensor_msgs/JointState.h"
 

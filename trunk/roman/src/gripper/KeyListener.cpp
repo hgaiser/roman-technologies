@@ -3,7 +3,7 @@
 #include "sensor_msgs/JointState.h"
 #include <linux/input.h>
 
-#include <roman/Key.h>
+#include <roman/gripper/Key.h>
 
 #include <iostream>
 #include <string>

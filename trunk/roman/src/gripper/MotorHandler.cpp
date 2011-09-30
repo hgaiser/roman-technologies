@@ -2,7 +2,7 @@
 #include <ros/ros.h>
 #include <threemxl/example.h>
 #include <threemxl/C3mxlROS.h>
-#include <roman/MotorHandler.h>
+#include <roman/gripper/MotorHandler.h>
 #include <iostream>
 
 /**

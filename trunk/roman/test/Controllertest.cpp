@@ -1,4 +1,5 @@
 #include "roman/Controller.h"
+#include <gtest/gtest.h>
 
 ros::Publisher keyTest_pub;
 ros::Subscriber sensorTest_sub;
@@ -14,9 +15,9 @@ TEST(SensorCallBackTest, SensorActivated)
     roman::Key msg;
     //Triangle button is pressed (button no. 12)
     msg.keys.push_back(12);
-    msg.keys.push_back(255);
+    msg.values.push_back(255);
 
-    test_pub.publish(msg);
+    keyTest_pub.publish(msg);
     ros::Rate rate(10);
 
         unsigned int cycles = 10;
