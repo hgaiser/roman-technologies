@@ -1,9 +1,9 @@
-#ifndef __MOTORHANDLER_H
-#define __MOTORHANDLER_H
+#ifndef __MOTOR_H
+#define __MOTOR_H
 
-#include <ros/ros.h>
 #include <CDxlGeneric.h>
-#include <roman/gripper/MotorControl.h>
+#include <threemxl/C3mxlROS.h>
+#include <string>
 
 enum ControlMode
 {
@@ -20,35 +20,39 @@ enum ControlMode
 };
 
 /// Listens to motor commands and handles them accordingly.
-class MotorHandler
+class Motor
 {
 protected:
-    ros::NodeHandle nh_;    /// ROS node handle
+    int engine_number;      /// Motor id (left, right or arm motor)
     CDxlGeneric *motor_;    /// Motor interface
     LxSerial serial_port_;  /// Serial port interface
     ControlMode cmode;      /// Keeps track of what ControlMode the motor is in at the moment
 
 public:
     /// Constructor
-    MotorHandler() : nh_("~"), motor_(NULL), cmode(CM_NONE) { }
+    Motor(int id) : engine_number(id), motor_(NULL), cmode(CM_NONE) { }
     
     /// Destructor
     /** Delete motor interface, close serial port, and shut down node handle */
-    ~MotorHandler()
+    ~Motor()
     {
         if (motor_)
             delete motor_;
         if (serial_port_.is_port_open())
             serial_port_.port_close();
           
-        nh_.shutdown();
     }
 
     /// Initialize node
     /** \param path path to shared_serial node */
     void init(char *path);
 
-    void chatterCallback(const roman::MotorControlPtr& mc);
+    void setMode(int mode);
+    void setSpeed(double speed);
+    void setAcceleration(double aceleration);
+
+    int getMode();
+    int getID();
 };    
 
-#endif /* __MOTORHANDLER_H */
+#endif /* __MOTOR_H */

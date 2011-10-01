@@ -21,11 +21,13 @@ rosbuild_genmsg()
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
+rosbuild_add_executable(BaseController src/mobile_manipulator/Motor.cpp src/mobile_manipulator/BaseController.cpp)
 rosbuild_add_executable(MotorHandler src/gripper/MotorHandler.cpp)
 rosbuild_add_executable(KeyListener src/gripper/KeyListener.cpp)
 rosbuild_add_executable(TemperatureListener src/gripper/TemperatureListener.cpp)
 rosbuild_add_executable(Controller src/gripper/Controller.cpp)
 rosbuild_add_gtest(Controllertest test/Controllertest.cpp)
+
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)

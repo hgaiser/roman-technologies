@@ -2,7 +2,7 @@
 #define __ULTRASONE_H
 
 #include <ros/ros.h>
-#include "roman/Temperature.h"
+#include "roman/gripper/Temperature.h"
 #include <fstream>
 #include <time.h>
 

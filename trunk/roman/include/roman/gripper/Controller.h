@@ -2,10 +2,10 @@
 #define __CONTROLLER_H
 
 #include <ros/ros.h>
-#include <roman/Distance.h>
+#include <roman/gripper/Distance.h>
 #include <CDxlGeneric.h>
-#include <roman/MotorControl.h>
-#include <roman/Key.h>
+#include <roman/gripper/MotorControl.h>
+#include <roman/gripper/Key.h>
 #include "std_msgs/Empty.h"
 
 /// Different gripper states.
