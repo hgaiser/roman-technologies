@@ -1,6 +1,4 @@
 #include "roman/gripper/Controller.h"
-#include <sstream>
-#include "sensor_msgs/JointState.h"
 
 #define JOINT_COUNT 7
 
@@ -61,7 +59,7 @@ void Controller::init()
 
     // initialize subscribers
     mSensor_sub = mNodeHandle.subscribe("sensorFeedbackTopic", 10, &Controller::readSensorDataCB, this);
-    mKey_sub    = mNodeHandle.subscribe("keyTopic", 10, &Controller::keyCB, this);
+    mKey_sub    = mNodeHandle.subscribe("joy", 10, &Controller::keyCB, this);
 
     ROS_INFO("Controller initialized");
 }
@@ -95,121 +93,9 @@ void Controller::readSensorDataCB(const roman::DistancePtr& msg)
 }
 
 /**
- * Called when sensor should be activated/deactivated.
-*/
-void Controller::keyCB(const roman::KeyPtr& msg)
-{
-    //ROS_INFO("Key Received. Id = %d, value = %d", msg->keys[i], msg->values[i]);
-
-    roman::MotorControl mc;
-
-    // handle complete buffer of keys that have been pressed
-    for (size_t i = 0; i < msg->keys.size(); i++)
-    {
-        // if there is already a key registered as being pushed and its value is now 0,
-        // then we no longer have a registered pushed key
-        if (mKeyPressed == msg->keys[i] && msg->values[i] == 0)
-        {
-            mKeyPressed = PS3_NONE;
-
-            // if the key was one of the shoulder buttons, release the motor
-            if (msg->keys[i] == PS3_USB_L2 || msg->keys[i] == PS3_USB_R2 ||
-                msg->keys[i] == PS3_USB_L1 || msg->keys[i] == PS3_USB_R1 ||
-                msg->keys[i] == PS3_BT_L2 || msg->keys[i] == PS3_BT_R2 ||
-                msg->keys[i] == PS3_BT_L1 || msg->keys[i] == PS3_BT_R1)
-            {
-                mc.modeStr = "torque";
-                mc.value = 0.f;
-                mc.waitTime = 0;
-            }
-        }
-        else if (msg->values[i] > 1)
-        {
-            // handle key events (create callbacks for this?)
-            switch (msg->keys[i])
-            {
-            case PS3_USB_X:
-            case PS3_BT_X:
-                if (mKeyPressed != PS3_NONE)
-                   break;
-
-                mKeyPressed = PS3Key(msg->keys[i]);
-                // open the gripper
-                mc.modeStr = "torque";
-                mc.value = 0.5f;
-                mc.waitTime = 1000;
-
-                ROS_INFO("X BUTTON");
-                break;
-            case PS3_USB_O:
-            case PS3_BT_O:
-                if (mKeyPressed != PS3_NONE)
-                    break;
-
-                mKeyPressed = PS3Key(msg->keys[i]);
-                // close the gripper
-                mc.modeStr = "torque";
-                mc.value = -0.5f;
-                mc.waitTime = 1000;
-
-                ROS_INFO("O BUTTON");
-                break;
-            case PS3_USB_R2:
-            case PS3_USB_L2:
-            case PS3_BT_R2:
-            case PS3_BT_L2:
-            {
-                ROS_INFO("SHOULDER BUTTON R2/L2 %d", msg->values[i]);
-
-                mKeyPressed = PS3Key(msg->keys[i]);
-                mc.modeStr = "current";
-                // interpolate between 0 and 0.5A
-                mc.value = 0.5f * (float(msg->values[i]) / 255.f);
-                mc.waitTime = 0;
-
-                // close the gripper with L2 shoulder button
-                if (msg->keys[i] == PS3_USB_L2 || msg->keys[i] == PS3_BT_L2)
-                    mc.value = -mc.value;               
-                break;
-            }
-            case PS3_USB_R1:
-            case PS3_USB_L1:
-            case PS3_BT_R1:
-            case PS3_BT_L1:
-            {
-                ROS_INFO("SHOULDER BUTTON R1/L1 %d", msg->values[i]);
-
-                mKeyPressed = PS3Key(msg->keys[i]);
-                mc.modeStr = "torque";
-                // interpolate between 0 and 0.05Nm
-                mc.value = 0.05f * (float(msg->values[i]) / 255.f);
-                mc.waitTime = 0;
-
-                // close the gripper with L1 shoulder button
-                if (msg->keys[i] == PS3_USB_L1 || msg->keys[i] == PS3_BT_L1)
-                    mc.value = -mc.value;               
-                break;
-            }
-            case PS3_USB_T:
-            case PS3_BT_T:
-            {
-                if (mKeyPressed != PS3_NONE)
-                    break;
-
-                // toggle the sensor
-                mKeyPressed = PS3Key(msg->keys[i]);
-                std_msgs::Empty msg;
-                mSensor_pub.publish(msg);
-                ROS_INFO("SENSOR TOGGLED");
-                break;
-            }
-            default:
-                break;
-            }
-        }
-    }
-
-    // is our message filled?
+  * Publish the given MotorControl message if possible and change visualization in rviz
+ */
+void Controller::publish(roman::MotorControl mc){
     if (mc.modeStr.empty() == false)
     {
         if (mGripperState != GS_OPEN && mc.value > 0.f)
@@ -235,8 +121,138 @@ void Controller::keyCB(const roman::KeyPtr& msg)
     }
 }
 
-int main(int argc, char **argv)
+
+/**
+ * Called when sensor should be activated/deactivated.
+*/
+void Controller::keyCB(const sensor_msgs::Joy& msg)
 {
+    //ROS_INFO("Key Received. Id = %d, value = %d", msg->keys[i], msg->values[i]);
+
+    roman::MotorControl mc;
+    std_msgs::Empty empty_msg;
+
+    //No button is pressed, so sum of vector is zero
+    if(std::accumulate(msg.buttons.begin(), msg.buttons.end(), 0) == 0){
+        // if the key was one of the shoulder buttons, release the motor
+        if (mKeyPressed == PS3_L1 || mKeyPressed == PS3_L2 ||
+                mKeyPressed == PS3_R1 || mKeyPressed == PS3_R2)
+        {
+            mc.modeStr = "torque";
+            mc.value = 0.f;
+            mc.waitTime = 0;
+            publish(mc);
+            mKeyPressed = PS3_NONE;
+        }
+        mKeyPressed = PS3_NONE;
+    }
+    else{
+	for(size_t i =0; i < msg.buttons.size(); i++){
+
+	if(msg.buttons[i] == 0)
+		continue;
+
+	switch(i){
+	case PS3_X:
+
+	if (mKeyPressed != PS3_NONE)
+        	break;
+
+            // open the gripper
+            mc.modeStr = "torque";
+            mc.value = 0.5f;
+            mc.waitTime = 1000;
+
+            publish(mc);
+
+	    mKeyPressed = PS3_X;
+	    break;
+
+	case PS3_O:
+
+	   if (mKeyPressed != PS3_NONE)
+	           break;
+
+	    // close the gripper
+            mc.modeStr = "torque";
+            mc.value = -0.5f;
+            mc.waitTime = 1000;
+
+            publish(mc);
+	    
+	    mKeyPressed = PS3_O;
+	    break;
+	
+	case PS3_T:
+
+	   if (mKeyPressed != PS3_NONE)
+           	break;
+
+            ROS_INFO("SENSOR TOGGLED");
+            mSensor_pub.publish(empty_msg);
+
+            mKeyPressed = PS3_T;
+
+	    mKeyPressed = PS3_T;
+	    break;
+
+	case PS3_R1:	
+            ROS_INFO("SHOULDER BUTTON R1 %f", msg.axes[PS3_R1]);
+
+            mc.modeStr = "torque";
+            // interpolate between 0 and 0.05Nm
+
+            mc.value = -0.05f * (float(msg.axes[PS3_R1]));
+            mc.waitTime = 0;
+
+            publish(mc);
+            mKeyPressed = PS3_R1;
+	    break;
+	
+	case PS3_L1:
+            ROS_INFO("SHOULDER BUTTON L1 %f", msg.axes[PS3_L1]);
+
+            mc.modeStr = "torque";
+            // interpolate between 0 and 0.05Nm
+            mc.value = 0.05f * float(msg.axes[PS3_L1]);
+            mc.waitTime = 0;
+
+            publish(mc);	
+	    mKeyPressed = PS3_L1;
+	    break;
+
+	case PS3_L2:
+	    mc.modeStr = "current";
+            // interpolate between 0 and 0.5A
+
+            mc.value = 0.5f * float(msg.axes[PS3_L2]);
+            mc.waitTime = 0;
+
+            publish(mc);
+
+            mKeyPressed = PS3_L2;
+	    break;
+
+	case PS3_R2:
+	    mc.modeStr = "current";
+            // interpolate between 0 and 0.5A
+
+            mc.value = -0.5f * (float(msg.axes[PS3_R2]));
+            mc.waitTime = 0;
+
+            publish(mc);
+
+            mKeyPressed = PS3_R2;
+	    break;
+
+	default:
+	    break;
+	}
+}
+}
+}
+
+int main(int argc, char **argv){
     // init ros and controller
     ros::init(argc, argv, "controller");
     Controller controller;

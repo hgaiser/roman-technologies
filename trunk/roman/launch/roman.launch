@@ -2,7 +2,6 @@
 
   <group ns="roman">
     <node pkg="roman" name="MotorHandler" type="MotorHandler"/>
-    <node pkg="roman" name="KeyListener" type="KeyListener"/>
     <node pkg="roman" name="Controller" type="Controller"/>
     <node pkg="roman" name="TemperatureListener" type="TemperatureListener"/>
   </group>

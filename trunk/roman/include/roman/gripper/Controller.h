@@ -2,11 +2,14 @@
 #define __CONTROLLER_H
 
 #include <ros/ros.h>
+#include <numeric>
 #include <roman/gripper/Distance.h>
 #include <CDxlGeneric.h>
 #include <roman/gripper/MotorControl.h>
-#include <roman/gripper/Key.h>
+#include "sensor_msgs/JointState.h"
+#include "sensor_msgs/Joy.h"
 #include "std_msgs/Empty.h"
+#include <sstream>
 
 /// Different gripper states.
 enum GripperState
@@ -19,23 +22,32 @@ enum GripperState
 /// Key ids for bluetooth connected PS3 controller (PS3Joy) and USB connected PS3 controller
 enum PS3Key
 {
-    PS3_NONE = 0,
-	PS3_BT_L2 = 8,
-	PS3_BT_R2 = 9,
-	PS3_BT_L1 = 10,
-	PS3_BT_R1 = 11,
-	PS3_BT_T = 12,
-	PS3_BT_O = 13,
-	PS3_BT_X = 14,
+    PS3_NONE = -1,
 
-	PS3_USB_L2 = 48,
-	PS3_USB_R2 = 49,
-	PS3_USB_L1 = 50,
-	PS3_USB_R1 = 51,
-	PS3_USB_T = 52,
-	PS3_USB_O = 53,
-	PS3_USB_X = 54,
+    PS3_SELECT = 0,
+    PS3_LEFT_STICK = 1,
+    PS3_RIGHT_STICK = 2,    
+    PS3_START = 3,
+
+    PS3_UP = 4,
+    PS3_RIGHT = 5,
+    PS3_DOWN = 6,
+    PS3_LEFT = 7,
+
+	PS3_L2 = 8,
+	PS3_R2 = 9,
+	PS3_L1 = 10,
+	PS3_R1 = 11,
+
+	PS3_T = 12,
+	PS3_O = 13,
+	PS3_X = 14,
+    PS3_S = 15,
+
+    PS3_HOME = 16,
 };
+
+
 
 /// Receives sensor feedback and sends gripper control messages.
 class Controller
@@ -69,7 +81,10 @@ public:
     /// Initialize node
     void init();
 
-    void keyCB(const roman::KeyPtr& msg);
+    /// Publish MotorControl message
+    void publish(roman::MotorControl mc);
+
+    void keyCB(const sensor_msgs::Joy& msg);
     void readSensorDataCB(const roman::DistancePtr& msg);
 };    
 
