@@ -1,0 +1,17 @@
+<launch>
+	<include file="$(find image_server)/launch/transforms.launch"/>
+
+	<arg name="config_file" default="$(find image_server)/config/config.xml"/>
+	<node name="KinectServer" pkg="image_server" type="KinectServer" args="$(arg config_file)" output="screen" respawn="true">
+		<param name="send_empty_laserscan" value="false"/>
+		<param name="scale" value="0.5"/>
+		<param name="publish_rgb" value="true"/>
+		<param name="publish_depth" value="true"/>
+		<param name="publish_rgb_depth" value="true"/>
+		<param name="publish_cloud" value="false"/>
+		<param name="publish_xyzrgb" value="false"/>
+		<param name="close_idle_kinect" value="true"/>
+		<param name="show_fps" value="true"/>
+		<param name="fps" value="30"/>
+	</node>
+</launch>

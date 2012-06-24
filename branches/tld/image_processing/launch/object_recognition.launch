@@ -1,0 +1,4 @@
+<launch>
+  <node pkg="image_processing" name="ObjectTrackingTLD" type="ObjectTrackingTLD" respawn="true" output="screen"/>
+  <node pkg="image_processing" name="TabletopSegmentation" type="TabletopSegmentation" respawn="true" output="screen"/>
+</launch>

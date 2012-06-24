@@ -1,0 +1,22 @@
+<launch>
+  <!-- start focus face -->
+  <include file="$(find image_processing)/launch/focus_face.launch"/>
+
+  <!-- start audio processing -->
+  <!-- include file="$(find audio_processing)/launch/speech.launch"/ -->
+
+  <!-- start navigation -->
+  <include file="$(find logical_unit)/launch/navigation.launch"/>
+
+  <!-- start object recognition -->
+  <include file="$(find image_processing)/launch/object_recognition.launch"/>
+
+  <!-- start logical unit controller -->
+  <!-- include file="$(find logical_unit)/launch/controller.launch"/ -->
+
+  <!-- start PS3 controller -->
+  <!-- node name="PS3Controller" pkg="logical_unit" type="PS3Controller"/-->
+
+  <!-- start PersonTracker -->
+  <node name="PersonTracker" pkg="image_processing" type="PersonTracker"/>
+</launch>
