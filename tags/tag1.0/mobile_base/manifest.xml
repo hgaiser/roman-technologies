@@ -1,0 +1,17 @@
+<package>
+  <description brief="roman_bot">
+
+     roman_bot
+
+  </description>
+  <author>Hans Gaiser</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <depend package="motors"/>
+  <depend package="std_msgs"/>
+  <depend package="tf"/>
+  <depend package="nav_msgs"/>
+  <depend package="nero_msgs"/>
+
+</package>
+

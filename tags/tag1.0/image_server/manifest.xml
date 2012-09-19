@@ -1,0 +1,24 @@
+<package>
+  <description brief="image_server">
+
+     image_server
+
+  </description>
+  <author>Kungfu Panda</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/image_server</url>
+
+  <depend package="sensor_msgs"/>
+  <depend package="nero_msgs"/>
+  <depend package="image_transport"/>
+  <depend package="opencv2"/>
+
+  <rosdep name="openni-dev"/>
+
+  <export>
+      <cpp cflags="-I${prefix}/include -I/usr/include/ni" lflags="-L${prefix}/lib -Wl,-rpath,${prefix}/lib -lOpenCVTools -lOpenNI -lusb-1.0"/>
+  </export>
+</package>
+
+

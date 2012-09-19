@@ -1,0 +1,13 @@
+<launch>
+  <!-- start ps3 controller -->
+  <!-- include file="$(find nero_launch)/launch/ps3joy.launch"/ -->
+
+  <!-- start kinect -->
+  <!-- include file="$(find image_server)/launch/kinect.launch"/ -->
+ 
+  <!-- start nero_base -->
+  <include file="$(find nero_launch)/launch/nero_base.launch"/>
+
+  <!-- start nero_brain -->
+  <include file="$(find nero_launch)/launch/nero_brain.launch"/>
+</launch>

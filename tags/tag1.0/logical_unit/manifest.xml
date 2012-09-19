@@ -1,0 +1,22 @@
+<package>
+  <description brief="roman_bot">
+
+     roman_bot
+
+  </description>
+  <author>Hans Gaiser</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <depend package="nav_msgs"/>
+  <depend package="tf"/>
+  <depend package="audio_processing"/>  
+  <depend package="head"/>
+  <depend package="arm"/>
+  <depend package="image_processing"/>
+  <depend package="joy"/>
+  <depend package="nero_msgs"/>
+  <depend package="recast"/>
+
+  <rosdep name="yaml-cpp"/>
+</package>
+
